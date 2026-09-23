@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vozes da fronteira · nuvem de palavras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300..900&display=swap" rel="stylesheet">
+<style>
+  /* Tema claro (padrão) */
+  :root{
+    --font:"Motiva Sans","Albert Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --bg:#F7F8F6; --ink:#1B2B36; --muted:#3F6F73; --accent:#B64B35; --rule:rgba(27,43,54,.12);
+    --m0:#1B2B36; --m1:#264D52; --m2:#354470; --m3:#B64B35; --m4:#2A4435; --m5:#9A6B4E; --m6:#262523;
+    --b0:#DBA954; --b1:#58703F; --b2:#3F6F73;
+    --e0:#7BA59B; --e1:#DBA954; --e2:#3F6F73; --e3:#9A6B4E;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1B2B36; --ink:#EDE6DA; --muted:#7BA59B; --accent:#DBA954; --rule:rgba(237,230,218,.14);
+      --m0:#EDE6DA; --m1:#7BA59B; --m2:#DBA954; --m3:#EDE6DA; --m4:#7BA59B; --m5:#DBA954; --m6:#EDE6DA;
+      --b0:#B64B35; --b1:#9A6B4E; --b2:#DBA954;
+      --e0:#3F6F73; --e1:#58703F; --e2:#354470; --e3:#9A6B4E;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#1B2B36; --ink:#EDE6DA; --muted:#7BA59B; --accent:#DBA954; --rule:rgba(237,230,218,.14);
+    --m0:#EDE6DA; --m1:#7BA59B; --m2:#DBA954; --m3:#EDE6DA; --m4:#7BA59B; --m5:#DBA954; --m6:#EDE6DA;
+    --b0:#B64B35; --b1:#9A6B4E; --b2:#DBA954;
+    --e0:#3F6F73; --e1:#58703F; --e2:#354470; --e3:#9A6B4E;
+  }
+
+  :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+  html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px);background:var(--bg)}
+  body{height:100%;margin:0;overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--font);
+       -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  #wrap{position:relative;width:100%;height:100%;overflow:hidden;touch-action:manipulation;
+        -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+  #stage{position:absolute;left:0;top:0;width:3840px;height:2160px;transform-origin:0 0;background:var(--bg);overflow:hidden}
+
+  .w{position:absolute;left:0;top:0;white-space:nowrap;line-height:1;letter-spacing:-0.012em;
+     font-family:var(--font);cursor:pointer;will-change:transform;opacity:0;outline:none;
+     transition:opacity .9s ease, color .6s ease}
+  .w.on{opacity:1}
+  .w:focus-visible{text-decoration:underline;text-decoration-thickness:.06em;text-underline-offset:.12em}
+  #stage.focus .w.on{opacity:.05}
+  #stage.focus .w.on.sel{opacity:1;color:var(--accent)!important;z-index:5}
+
+  #card{position:absolute;left:50%;top:1080px;width:2600px;text-align:center;pointer-events:none;
+        opacity:0;transform:translate(-50%,30px);
+        transition:opacity .5s ease, transform .9s cubic-bezier(.2,.75,.2,1)}
+  #card.show{opacity:1;transform:translate(-50%,0)}
+  #card p{margin:0;font-size:84px;line-height:1.28;font-weight:400;color:var(--ink);text-wrap:balance}
+  #timer{width:440px;height:6px;margin:92px auto 0;border-radius:3px;background:var(--rule);overflow:hidden}
+  #timer i{display:block;width:100%;height:100%;background:var(--accent);transform-origin:left center}
+  #back{margin-top:34px;font-size:36px;font-weight:400;color:var(--muted)}
+
+  #hint{position:absolute;left:120px;bottom:70px;font-size:40px;line-height:1.35;color:var(--muted);
+        font-weight:500;transition:opacity .6s ease;pointer-events:none}
+  #hint span{display:block;font-weight:300}
+  #stage.focus #hint{opacity:0}
+
+  @media (prefers-reduced-motion: reduce){
+    #card{transition:opacity .3s ease}
+  }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="stage" aria-label="Nuvem de palavras sobre diversidade linguística">
+    <div id="hint">Toque em uma palavra para ler seu significado<span>Toca una palabra para leer su significado</span></div>
+    <div id="card" aria-live="polite">
+      <p id="meaning"></p>
+      <div id="timer"><i></i></div>
+      <div id="back">Toque em qualquer lugar para voltar à nuvem</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* [termo, significado, importância 2–5, tipo: t = termo, e = expressão] */
+  const RAW = [
+    ["Guarani","Idioma dos povos originários e língua de tradição oral do território.",5,"t"],
+    ["Itaipu","Palavra de origem guarani que significa “a pedra que canta”.",5,"t"],
+    ["Mymba-Kuera","Termo guarani usado para nomear a operação de resgate da fauna.",4,"t"],
+    ["Peabiru","Denominação do caminho ancestral pré-colonial.",4,"t"],
+    ["Quarup","Termo ritual associado ao movimento de luto por Sete Quedas.",3,"t"],
+    ["Avá-Guarani","Nome do povo indígena originário do território.",4,"t"],
+    ["Kaingang","Etnia indígena de forte presença histórica no Paraná.",3,"t"],
+    ["Portunhol","Dialeto vivo e cotidiano falado na fronteira trinacional.",5,"t"],
+    ["Espanhol","Idioma oficial dos países vizinhos com igual status expositivo.",4,"t"],
+    ["Português","Língua oficial do Brasil presente no percurso expográfico.",4,"t"],
+    ["Árabe","Idioma falado pela expressiva comunidade de imigrantes em Foz.",3,"t"],
+    ["Chinês","Língua presente nos áudios e no mosaico cultural da fronteira.",3,"t"],
+    ["Coreano","Idioma asiático registrado na paisagem sonora da região.",3,"t"],
+    ["Créole","Idioma trazido pelas correntes migratórias internacionais recentes.",3,"t"],
+    ["Tererê","Termo guarani/paraguai para o hábito de beber erva-mate gelada.",4,"t"],
+    ["Chipa","Nome da receita tradicional da culinária hispano-guarani.",3,"t"],
+    ["Cocido","Bebida tradicional de erva-mate queimada com açúcar.",2,"t"],
+    ["Chimarrão","Termo da cultura gaúcha e sulista para a infusão quente de erva-mate.",3,"t"],
+    ["Cuca","Palavra da tradição germânica para o bolo típico trazido pelos colonos.",2,"t"],
+    ["Sopa","Refere-se à “sopa paraguaia”, prato salgado emblemático da fronteira.",2,"t"],
+    ["Piá","Dizer regionalista e fônico paranaense para menino ou jovem.",3,"t"],
+    ["Jaguara","Expressão fônica e popular do vocabulário regional.",2,"t"],
+    ["Obragem","Termo histórico do ciclo extrativista da madeira e erva-mate.",3,"t"],
+    ["Obragero","Denominação dos trabalhadores do ciclo das obragens.",2,"t"],
+    ["Mensu","Trabalhador do regime de servidão no período obragero.",2,"t"],
+    ["Barrageiro","Denominação dos operários que construíram a usina.",4,"t"],
+    ["Sacoleiro","Vocábulo da dinâmica comercial urbana de fronteira.",3,"t"],
+    ["Catador","Sujeito urbano presente na pluralidade social do território.",2,"t"],
+    ["Pescador","Povo ribeirinho que vivencia diariamente as águas do rio.",3,"t"],
+    ["Fronteirista","Habituante que circula e vive na zona de fronteira.",3,"t"],
+    ["Bilíngue","Condição de sinalização e vivência em duas línguas.",3,"t"],
+    ["Trilíngue","Comunicação nos três idiomas principais (PT, ES, GN).",4,"t"],
+    ["Idioma","Sistema linguístico de expressão dos diferentes grupos.",3,"t"],
+    ["Sotaque","Variação fonética dos colonos sulistas, paraguaios e migrantes.",4,"t"],
+    ["Dialeto","Variações regionais e linguísticas presentes nos dispositivos de áudio.",3,"t"],
+    ["Oralidade","Dimensão essencial da transmissão cultural dos povos originários e barrageiros.",5,"t"],
+    ["Depoimento","Relato gravado em primeira pessoa para as estações de escuta.",3,"t"],
+    ["Relato","Narrativa de vida dos trabalhadores e moradores locais.",3,"t"],
+    ["Mosaico","Composição visual e sonora das vozes da exposição.",4,"t"],
+    ["Polifonia","Encontro de múltiplas vozes e línguas no mesmo espaço.",5,"t"],
+    ["Vozerio","Paisagem sonora do mercado, das vilas e dos canteiros de obra.",3,"t"],
+    ["Murmúrio","Som sutil de conversas em diferentes línguas nos nichos.",2,"t"],
+    ["Sussurro","Elemento sonoro para escuta atenta de memórias e orações.",2,"t"],
+    ["Grito","Expressão sonora do trabalho e da convivência comunitária.",2,"t"],
+    ["Topônimo","Nome próprio de lugar derivado de raízes indígenas ou históricas.",3,"t"],
+    ["Tradução","Mediação entre termos técnicos/locais e a linguagem cotidiana.",3,"t"],
+    ["Pertencimento","Sentimento despertado ao reconhecer a própria língua e cultura.",4,"t"],
+    ["Caldeirão","Metáfora do encontro e fusão das diversas matrizes étnicas.",4,"t"],
+    ["Pluralidade","Diversidade humana, social e linguística do território.",3,"t"],
+    ["Fronteira","Ponto de encontro, troca e coexistência cultural.",5,"t"],
+
+    ["Fronteira como ponte","A visão da fronteira como lugar de diálogo e união.",4,"e"],
+    ["Língua-mãe","Referência ao status do Guarani e dos idiomas nativos do território.",4,"e"],
+    ["Diversidade linguística","Eixo temático dedicado às línguas e sotaques regionais.",5,"e"],
+    ["Tríplice fronteira","A convergência geográfica e cultural de Brasil, Paraguai e Argentina.",5,"e"],
+    ["Poesia e oralidade dos barrageiros","A literatura oral dos operários da usina.",3,"e"],
+    ["A pedra que canta","Tradução poética do nome de origem guarani Itaipu.",5,"e"],
+    ["Mosaico de rostos e vozes","Instalação multissensorial dos sujeitos da fronteira.",3,"e"],
+    ["Portunhol da fronteira","A língua franca surgida da convivência diária.",3,"e"],
+    ["Relatos em primeira pessoa","Depoimentos diretos sem intermédio de narradores externos.",3,"e"],
+    ["Escuta atenta de relatos orais","Experiência sonora nos nichos de áudio e fones.",2,"e"],
+    ["Cultura essencialmente oral","Característica da tradição e transmissão de saberes Guarani.",3,"e"],
+    ["Sotaques do sul","Marcas fonéticas da colonização por gaúchos e catarinenses.",3,"e"],
+    ["Paisagem sonora viva","Conjunto de sons, línguas e ruídos históricos da exposição.",4,"e"],
+    ["Nuvem de idiomas","Aplicação gráfica com palavras cruzadas em múltiplas línguas.",3,"e"],
+    ["A palavra viva","O valor do testemunho falado sobre o texto escrito impresso.",4,"e"],
+    ["Histórias de vida e memórias","Registros pessoais que compõem o acervo imaterial.",2,"e"],
+    ["Pluralidade cultural e linguística","Riqueza de matrizes étnicas e idiomas do Oeste do Paraná.",2,"e"],
+    ["Línguas do território","Vocabulário dos povos originários e grupos de imigração.",3,"e"],
+    ["Vozes da fronteira","Depoimentos de brasileiros, paraguaios, árabes e imigrantes.",5,"e"],
+    ["Tradição e dizeres regionais","Expressões populares mantidas no cotidiano comunitário.",2,"e"]
+  ];
+
+  /* ---------- parâmetros ---------- */
+  const W = 3840, H = 2160;
+  const M = {l:120, r:120, t:110, b:190};            // margens da nuvem (base reserva a instrução)
+  const RESHUFFLE_MS = 34000;                         // recomposição da nuvem
+  const FOCUS_Y = 850;                                // linha da palavra em destaque
+  const FILL = 0.66;                                  // ocupação da área útil
+  const SIZE = {5:[170,215], 4:[108,138], 3:[74,92], 2:[54,66]};
+  const ECHO = [32,44];
+  const CAP  = {5:1500, 4:1050, 3:780, 2:620, echo:560};
+  const WEIGHTS = {5:[800,900,700], 4:[700,600,800], 3:[500,600,400], 2:[400,500,300], echo:[300,400]};
+
+  const root = document.documentElement;
+  const q = new URLSearchParams(location.search).get('tema');
+  if (q === 'escuro') root.dataset.theme = 'dark';
+  if (q === 'claro')  root.dataset.theme = 'light';
+
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wrap = document.getElementById('wrap');
+  const stage = document.getElementById('stage');
+  const card = document.getElementById('card');
+  const meaningEl = document.getElementById('meaning');
+  const timerBar = document.querySelector('#timer i');
+
+  const rand = (a,b) => a + Math.random()*(b-a);
+  const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+  const shuffle = arr => { for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];} return arr; };
+
+  /* ---------- escala do palco ---------- */
+  function fit(){
+    const vw = wrap.clientWidth, vh = wrap.clientHeight;
+    const s = Math.min(vw/W, vh/H);
+    stage.style.transform = `translate(${(vw-W*s)/2}px,${(vh-H*s)/2}px) scale(${s})`;
+  }
+  addEventListener('resize', fit); fit();
+
+  /* ---------- itens ---------- */
+  const items = [];
+  const mainSlots = ['--m0','--m1','--m2','--m3','--m4','--m5','--m6'];
+  const bigSlots  = ['--b0','--b1','--b2'];
+  const echoSlots = ['--e0','--e1','--e2','--e3'];
+  let mi = 0;
+
+  function makeItem(entry, echo){
+    const [text, meaning, imp, kind] = entry;
+    const el = document.createElement('span');
+    el.className = 'w';
+    el.textContent = text;
+    el.tabIndex = 0;
+    el.setAttribute('role','button');
+    el.setAttribute('aria-label', `${text}: ver significado`);
+    const tier = echo ? 'echo' : imp;
+    const fw = pick(WEIGHTS[tier]);
+    el.style.fontWeight = fw;
+    let slot;
+    if (echo) slot = pick(echoSlots);
+    else if (imp === 5 && Math.random() < .35) slot = pick(bigSlots);
+    else slot = mainSlots[(mi++) % mainSlots.length];
+    el.style.color = `var(${slot})`;
+    const single = !text.includes(' ') && text.length <= 11;
+    const it = {
+      text, meaning: /[.!?]$/.test(meaning) ? meaning : meaning + '.', imp, kind, echo, el, fw, tier,
+      rot: single && (echo ? Math.random() < .22 : (imp <= 3 && Math.random() < .22)),
+      w100: 0, size: 0,
+      x: W/2, y: H/2, s: 1, r: 0, tx: W/2, ty: H/2, ts: 1, tr: 0, fs: 1, tau: 1.4,
+      lx: 0, ly: 0, ls: 0, lr: 0,
+      amp: rand(.018,.034), w1: rand(.42,.9), p1: rand(0,6.28),
+      dA: echo ? rand(3,7) : rand(4,10), w2: rand(.15,.32), p2: rand(0,6.28), w3: rand(.12,.28), p3: rand(0,6.28)
+    };
+    el._it = it;
+    stage.appendChild(el);
+    items.push(it);
+  }
+  shuffle(RAW.slice()).forEach(e => makeItem(e,false));
+  shuffle(RAW.slice()).forEach(e => makeItem(e,true));
+  stage.appendChild(card); stage.appendChild(document.getElementById('hint'));
+
+  /* ---------- medição ---------- */
+  const ctx = document.createElement('canvas').getContext('2d');
+  function measureAll(){
+    for (const it of items){
+      ctx.font = `${it.fw} 100px ${getComputedStyle(root).getPropertyValue('--font')}`;
+      it.w100 = ctx.measureText(it.text).width * (1 - 0.012 * 0.5);
+    }
+  }
+
+  /* ---------- composição (espiral elíptica com grade de colisão) ---------- */
+  function sizeItems(feature){
+    for (const it of items){
+      const [a,b] = it.echo ? ECHO : SIZE[it.imp];
+      it.size = rand(a,b);
+      it.cap = CAP[it.echo ? 'echo' : it.imp];
+    }
+    if (feature){
+      shuffle(items.filter(i => !i.echo && i.imp <= 4)).slice(0,4).forEach(i => { i.size *= 1.55; i.cap = CAP[5]; });
+    }
+    let area = 0;
+    for (const it of items){
+      it.size = Math.min(it.size, it.cap*100/it.w100);
+      const w = it.w100*it.size/100, h = it.size*.9;
+      area += (w*1.06+12)*(h*1.1+12);
+    }
+    const usable = (W-M.l-M.r)*(H-M.t-M.b);
+    const f = Math.max(.7, Math.min(1.3, Math.sqrt(FILL*usable/area)));
+    items.forEach(i => i.size *= f);
+  }
+
+  function tryPlace(){
+    const L=M.l, R=W-M.r, T=M.t, B=H-M.b;
+    const cx=(L+R)/2, cy=(T+B)/2, asp=(R-L)/(B-T);
+    const ay=3, ax=ay*asp;
+    const thMax = ((B-T)/2)/ay*1.12;
+    const cell=160, cols=Math.ceil(W/cell), rows=Math.ceil(H/cell);
+    const grid = Array.from({length:cols*rows}, () => []);
+    let last = null;
+    const ov = (a,b) => a[0]<b[2] && a[2]>b[0] && a[1]<b[3] && a[3]>b[1];
+    const cl = (v,m) => v<0?0:(v>m?m:v);
+    function collide(r){
+      if (last && ov(r,last)) return true;
+      const c0=cl(Math.floor(r[0]/cell),cols-1), c1=cl(Math.floor(r[2]/cell),cols-1);
+      const r0=cl(Math.floor(r[1]/cell),rows-1), r1=cl(Math.floor(r[3]/cell),rows-1);
+      for (let yy=r0; yy<=r1; yy++) for (let xx=c0; xx<=c1; xx++){
+        const cellArr = grid[yy*cols+xx];
+        for (let k=0;k<cellArr.length;k++){ if (ov(r,cellArr[k])){ last=cellArr[k]; return true; } }
+      }
+      return false;
+    }
+    function insert(r){
+      const c0=cl(Math.floor(r[0]/cell),cols-1), c1=cl(Math.floor(r[2]/cell),cols-1);
+      const r0=cl(Math.floor(r[1]/cell),rows-1), r1=cl(Math.floor(r[3]/cell),rows-1);
+      for (let yy=r0; yy<=r1; yy++) for (let xx=c0; xx<=c1; xx++) grid[yy*cols+xx].push(r);
+    }
+    const order = items.slice().sort((a,b) => b.size-a.size);
+    for (const it of order){
+      const w = it.w100*it.size/100, h = it.size*.9;
+      const bw = it.rot ? h : w, bh = it.rot ? w : h;
+      const longPad = Math.max(w,h)*.03+6, shortPad = Math.min(w,h)*.05+6;
+      const px = it.rot ? shortPad : longPad, py = it.rot ? longPad : shortPad;
+      const hx = bw/2+px, hy = bh/2+py;
+      const ph = Math.random()*Math.PI*2, jx = rand(-60,60), jy = rand(-40,40);
+      let th = 0, x = 0, y = 0, ok = false;
+      while (th < thMax){
+        const co = Math.cos(th+ph), si = Math.sin(th+ph);
+        x = cx + jx + ax*th*Math.sign(co)*Math.pow(Math.abs(co),.5);
+        y = cy + jy + ay*th*Math.sign(si)*Math.pow(Math.abs(si),.5);
+        if (x-bw/2 >= L && x+bw/2 <= R && y-bh/2 >= T && y+bh/2 <= B){
+          const r = [x-hx, y-hy, x+hx, y+hy];
+          if (!collide(r)){ insert(r); ok = true; break; }
+        }
+        th += Math.min(.3, 12/(ay*th*asp+1));
+      }
+      if (!ok) return false;
+      it.lx = x; it.ly = y; it.ls = it.size; it.lr = it.rot ? -90 : 0;
+    }
+    return true;
+  }
+
+  function compose(feature){
+    sizeItems(feature);
+    for (let a=0; a<12; a++){
+      if (tryPlace()) return true;
+      items.forEach(i => i.size *= .95);
+    }
+    return false;
+  }
+
+  function setFontSize(it){
+    it.fs = Math.max(it.ts, it.s);
+    it.el.style.fontSize = it.fs.toFixed(2) + 'px';
+  }
+  function toSlot(it, tau){
+    it.tx = it.lx; it.ty = it.ly; it.ts = it.ls; it.tr = it.lr; it.tau = tau;
+    setFontSize(it);
+  }
+
+  /* ---------- animação ---------- */
+  let focused = null, lastT = performance.now();
+  function frame(now){
+    const dt = Math.min(.05, (now-lastT)/1000); lastT = now;
+    const t = now/1000;
+    for (let i=0;i<items.length;i++){
+      const it = items[i];
+      const k = 1 - Math.exp(-dt/it.tau);
+      it.x += (it.tx-it.x)*k; it.y += (it.ty-it.y)*k;
+      it.s += (it.ts-it.s)*k; it.r += (it.tr-it.r)*k;
+      if (it.fs !== it.ts && Math.abs(it.s-it.ts) < .4){ it.s = it.ts; setFontSize(it); }
+      let b = 1, dx = 0, dy = 0;
+      if (!reduced){
+        if (it === focused) b = 1 + .012*Math.sin(t*.8+it.p1);
+        else {
+          b = 1 + it.amp*Math.sin(t*it.w1+it.p1) + .02*Math.sin(t*.33 - it.x/650 - it.y/1400);
+          dx = it.dA*Math.sin(t*it.w2+it.p2); dy = it.dA*.7*Math.cos(t*it.w3+it.p3);
+        }
+      }
+      const sc = it.s/it.fs*b;
+      it.el.style.transform =
+        `translate3d(${(it.x+dx).toFixed(1)}px,${(it.y+dy).toFixed(1)}px,0) translate(-50%,-50%) rotate(${it.r.toFixed(2)}deg) scale(${sc.toFixed(4)})`;
+    }
+    requestAnimationFrame(frame);
+  }
+
+  /* ---------- destaque ---------- */
+  let closeTimer = 0, showTimer = 0, lastTouch = 0;
+  function open(it){
+    lastTouch = performance.now();
+    if (focused === it){ close(); return; }
+    if (focused){ focused.el.classList.remove('sel'); toSlot(focused, .7); }
+    focused = it;
+    stage.classList.add('focus');
+    it.el.classList.add('sel');
+    const fitSize = Math.min(300, 3300*100/it.w100);
+    it.tx = W/2; it.ty = FOCUS_Y; it.tr = 0; it.ts = fitSize; it.tau = reduced ? .15 : .42;
+    setFontSize(it);
+
+    card.classList.remove('show');
+    clearTimeout(showTimer); clearTimeout(closeTimer);
+    showTimer = setTimeout(() => {
+      meaningEl.textContent = it.meaning;
+      card.classList.add('show');
+    }, reduced ? 0 : 260);
+
+    const ms = Math.min(15000, 7000 + it.meaning.length*60);
+    timerBar.style.transition = 'none';
+    timerBar.style.transform = 'scaleX(1)';
+    void timerBar.offsetWidth;
+    timerBar.style.transition = `transform ${ms}ms linear`;
+    timerBar.style.transform = 'scaleX(0)';
+    closeTimer = setTimeout(close, ms);
+  }
+  function close(){
+    clearTimeout(closeTimer); clearTimeout(showTimer);
+    if (!focused) return;
+    const it = focused; focused = null;
+    it.el.classList.remove('sel');
+    toSlot(it, reduced ? .15 : .75);
+    stage.classList.remove('focus');
+    card.classList.remove('show');
+    lastTouch = performance.now();
+  }
+
+  stage.addEventListener('click', e => {
+    const el = e.target.closest('.w');
+    if (el) open(el._it); else close();
+  });
+  addEventListener('keydown', e => {
+    if (e.key === 'Escape') close();
+    else if ((e.key === 'Enter' || e.key === ' ') && document.activeElement && document.activeElement._it){
+      e.preventDefault(); open(document.activeElement._it);
+    } else if (e.key === 't' || e.key === 'T'){
+      const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+      root.dataset.theme = dark ? 'light' : 'dark';
+    }
+  });
+
+  /* ---------- recomposição periódica ---------- */
+  function reshuffle(){
+    if (focused || document.hidden || performance.now()-lastTouch < 10000) return;
+    if (!compose(true)) return;
+    items.forEach(it => toSlot(it, 1.7));
+  }
+
+  /* ---------- início ---------- */
+  async function start(){
+    try {
+      await Promise.race([
+        Promise.all([300,400,500,600,700,800,900].map(w => document.fonts.load(`${w} 100px "Albert Sans"`))).then(() => document.fonts.ready),
+        new Promise(r => setTimeout(r, 3000))
+      ]);
+    } catch(e){}
+    measureAll();
+    compose(false);
+    const cx = W/2, cy = (M.t + H - M.b)/2;
+    const order = items.slice().sort((a,b) => b.ls-a.ls);
+    order.forEach((it, i) => {
+      it.x = cx + (it.lx-cx)*.25; it.y = cy + (it.ly-cy)*.25;
+      it.s = it.ls*.2; it.r = it.lr;
+      toSlot(it, reduced ? .2 : 1.5);
+      it.fs = it.ls; it.el.style.fontSize = it.ls.toFixed(2)+'px';
+      setTimeout(() => it.el.classList.add('on'), reduced ? 0 : 120 + i*16);
+    });
+    requestAnimationFrame(t => { lastT = t; requestAnimationFrame(frame); });
+    if (!reduced) setInterval(reshuffle, RESHUFFLE_MS);
+  }
+  start();
+})();
+</script>
+</body>
+</html>
