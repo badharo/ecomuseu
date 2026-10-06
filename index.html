@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Vozes da fronteira · nuvem de palavras</title>
+<title>Transição energética · nuvem de palavras</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300..900&display=swap" rel="stylesheet">
@@ -11,24 +11,24 @@
   /* Tema claro (padrão) */
   :root{
     --font:"Motiva Sans","Albert Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-    --bg:#F7F8F6; --ink:#1B2B36; --muted:#3F6F73; --accent:#B64B35; --rule:rgba(27,43,54,.12);
-    --m0:#1B2B36; --m1:#264D52; --m2:#354470; --m3:#B64B35; --m4:#2A4435; --m5:#9A6B4E; --m6:#262523;
-    --b0:#DBA954; --b1:#58703F; --b2:#3F6F73;
-    --e0:#7BA59B; --e1:#DBA954; --e2:#3F6F73; --e3:#9A6B4E;
+    --bg:#F6F7F9; --ink:#233580; --muted:#4E8D94; --accent:#E23C2E; --rule:rgba(35,53,128,.14);
+    --m0:#233580; --m1:#E23C2E; --m2:#1844A6; --m3:#8B1E2F; --m4:#380822; --m5:#3B8C4F; --m6:#4E8D94;
+    --b0:#E5913C; --b1:#6674E6; --b2:#92C96C;
+    --e0:#6674E6; --e1:#92C96C; --e2:#E5913C; --e3:#4E8D94;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --bg:#1B2B36; --ink:#EDE6DA; --muted:#7BA59B; --accent:#DBA954; --rule:rgba(237,230,218,.14);
-      --m0:#EDE6DA; --m1:#7BA59B; --m2:#DBA954; --m3:#EDE6DA; --m4:#7BA59B; --m5:#DBA954; --m6:#EDE6DA;
-      --b0:#B64B35; --b1:#9A6B4E; --b2:#DBA954;
-      --e0:#3F6F73; --e1:#58703F; --e2:#354470; --e3:#9A6B4E;
+      --bg:#380822; --ink:#F4EDEA; --muted:#92C96C; --accent:#E5913C; --rule:rgba(244,237,234,.16);
+      --m0:#F4EDEA; --m1:#E5913C; --m2:#92C96C; --m3:#F4EDEA; --m4:#6674E6; --m5:#E5913C; --m6:#92C96C;
+      --b0:#E23C2E; --b1:#4E8D94; --b2:#6674E6;
+      --e0:#8B1E2F; --e1:#4E8D94; --e2:#1844A6; --e3:#3B8C4F;
     }
   }
   :root[data-theme="dark"]{
-    --bg:#1B2B36; --ink:#EDE6DA; --muted:#7BA59B; --accent:#DBA954; --rule:rgba(237,230,218,.14);
-    --m0:#EDE6DA; --m1:#7BA59B; --m2:#DBA954; --m3:#EDE6DA; --m4:#7BA59B; --m5:#DBA954; --m6:#EDE6DA;
-    --b0:#B64B35; --b1:#9A6B4E; --b2:#DBA954;
-    --e0:#3F6F73; --e1:#58703F; --e2:#354470; --e3:#9A6B4E;
+    --bg:#380822; --ink:#F4EDEA; --muted:#92C96C; --accent:#E5913C; --rule:rgba(244,237,234,.16);
+    --m0:#F4EDEA; --m1:#E5913C; --m2:#92C96C; --m3:#F4EDEA; --m4:#6674E6; --m5:#E5913C; --m6:#92C96C;
+    --b0:#E23C2E; --b1:#4E8D94; --b2:#6674E6;
+    --e0:#8B1E2F; --e1:#4E8D94; --e2:#1844A6; --e3:#3B8C4F;
   }
 
   :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
@@ -37,134 +37,128 @@
        -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   #wrap{position:relative;width:100%;height:100%;overflow:hidden;touch-action:manipulation;
         -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
-  #stage{position:absolute;left:0;top:0;width:3840px;height:2160px;transform-origin:0 0;background:var(--bg);overflow:hidden}
+  #stage{position:absolute;left:0;top:0;width:535px;height:1920px;transform-origin:0 0;background:var(--bg);overflow:hidden}
 
-  .w{position:absolute;left:0;top:0;white-space:nowrap;line-height:1;letter-spacing:-0.012em;
+  .w{position:absolute;left:0;top:0;white-space:pre;text-align:center;line-height:.95;letter-spacing:-0.012em;
      font-family:var(--font);cursor:pointer;will-change:transform;opacity:0;outline:none;
      transition:opacity .9s ease, color .6s ease}
   .w.on{opacity:1}
   .w:focus-visible{text-decoration:underline;text-decoration-thickness:.06em;text-underline-offset:.12em}
-  #stage.focus .w.on{opacity:.05}
+  #stage.focus .w.on{opacity:.035}
   #stage.focus .w.on.sel{opacity:1;color:var(--accent)!important;z-index:5}
 
-  #card{position:absolute;left:50%;top:1080px;width:2600px;text-align:center;pointer-events:none;
-        opacity:0;transform:translate(-50%,30px);
+  #card{position:absolute;left:50%;top:800px;width:463px;text-align:center;pointer-events:none;
+        opacity:0;transform:translate(-50%,16px);
         transition:opacity .5s ease, transform .9s cubic-bezier(.2,.75,.2,1)}
   #card.show{opacity:1;transform:translate(-50%,0)}
-  #card p{margin:0;font-size:84px;line-height:1.28;font-weight:400;color:var(--ink);text-wrap:balance}
-  #timer{width:440px;height:6px;margin:92px auto 0;border-radius:3px;background:var(--rule);overflow:hidden}
+  #full{font-size:18px;line-height:1.35;color:var(--muted);margin-bottom:22px;font-weight:500}
+  #full:empty{display:none}
+  #meaning{margin:0;font-size:32px;line-height:1.3;font-weight:400;color:var(--ink);text-wrap:balance}
+  .rule{width:56px;height:3px;border-radius:2px;background:var(--accent);margin:44px auto 36px}
+  #trans{font-size:21px;line-height:1.42;color:var(--muted);text-wrap:balance}
+  #trans b{display:block;font-weight:700;color:var(--ink);margin:10px 0 6px;font-size:22px}
+  .tag{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.14em;color:var(--accent);
+       border:1.5px solid currentColor;border-radius:4px;padding:3px 7px 2px}
+  #timer{width:160px;height:4px;margin:56px auto 0;border-radius:2px;background:var(--rule);overflow:hidden}
   #timer i{display:block;width:100%;height:100%;background:var(--accent);transform-origin:left center}
-  #back{margin-top:34px;font-size:36px;font-weight:400;color:var(--muted)}
+  #back{margin-top:22px;font-size:16px;line-height:1.4;color:var(--muted)}
+  #back span{display:block;font-weight:300}
 
-  #hint{position:absolute;left:120px;bottom:70px;font-size:40px;line-height:1.35;color:var(--muted);
-        font-weight:500;transition:opacity .6s ease;pointer-events:none}
+  #hint{position:absolute;left:0;right:0;bottom:44px;text-align:center;font-size:18px;line-height:1.4;
+        color:var(--muted);font-weight:500;transition:opacity .6s ease;pointer-events:none}
   #hint span{display:block;font-weight:300}
   #stage.focus #hint{opacity:0}
 
-  @media (prefers-reduced-motion: reduce){
-    #card{transition:opacity .3s ease}
-  }
+  @media (prefers-reduced-motion: reduce){ #card{transition:opacity .3s ease} }
 </style>
 </head>
 <body>
 <div id="wrap">
-  <div id="stage" aria-label="Nuvem de palavras sobre diversidade linguística">
+  <div id="stage" aria-label="Nuvem de palavras sobre transição energética e sustentabilidade">
     <div id="hint">Toque em uma palavra para ler seu significado<span>Toca una palabra para leer su significado</span></div>
     <div id="card" aria-live="polite">
+      <div id="full"></div>
       <p id="meaning"></p>
+      <div class="rule"></div>
+      <div id="trans"><span class="tag" id="tlang"></span><b id="tterm"></b><span id="tmean"></span></div>
       <div id="timer"><i></i></div>
-      <div id="back">Toque em qualquer lugar para voltar à nuvem</div>
+      <div id="back">Toque para voltar à nuvem<span>Toca para volver a la nube</span></div>
     </div>
   </div>
 </div>
 
 <script>
 (function(){
-  /* [termo, significado, importância 2–5, tipo: t = termo, e = expressão] */
-  const RAW = [
-    ["Guarani","Idioma dos povos originários e língua de tradição oral do território.",5,"t"],
-    ["Itaipu","Palavra de origem guarani que significa “a pedra que canta”.",5,"t"],
-    ["Mymba-Kuera","Termo guarani usado para nomear a operação de resgate da fauna.",4,"t"],
-    ["Peabiru","Denominação do caminho ancestral pré-colonial.",4,"t"],
-    ["Quarup","Termo ritual associado ao movimento de luto por Sete Quedas.",3,"t"],
-    ["Avá-Guarani","Nome do povo indígena originário do território.",4,"t"],
-    ["Kaingang","Etnia indígena de forte presença histórica no Paraná.",3,"t"],
-    ["Portunhol","Dialeto vivo e cotidiano falado na fronteira trinacional.",5,"t"],
-    ["Espanhol","Idioma oficial dos países vizinhos com igual status expositivo.",4,"t"],
-    ["Português","Língua oficial do Brasil presente no percurso expográfico.",4,"t"],
-    ["Árabe","Idioma falado pela expressiva comunidade de imigrantes em Foz.",3,"t"],
-    ["Chinês","Língua presente nos áudios e no mosaico cultural da fronteira.",3,"t"],
-    ["Coreano","Idioma asiático registrado na paisagem sonora da região.",3,"t"],
-    ["Créole","Idioma trazido pelas correntes migratórias internacionais recentes.",3,"t"],
-    ["Tererê","Termo guarani/paraguai para o hábito de beber erva-mate gelada.",4,"t"],
-    ["Chipa","Nome da receita tradicional da culinária hispano-guarani.",3,"t"],
-    ["Cocido","Bebida tradicional de erva-mate queimada com açúcar.",2,"t"],
-    ["Chimarrão","Termo da cultura gaúcha e sulista para a infusão quente de erva-mate.",3,"t"],
-    ["Cuca","Palavra da tradição germânica para o bolo típico trazido pelos colonos.",2,"t"],
-    ["Sopa","Refere-se à “sopa paraguaia”, prato salgado emblemático da fronteira.",2,"t"],
-    ["Piá","Dizer regionalista e fônico paranaense para menino ou jovem.",3,"t"],
-    ["Jaguara","Expressão fônica e popular do vocabulário regional.",2,"t"],
-    ["Obragem","Termo histórico do ciclo extrativista da madeira e erva-mate.",3,"t"],
-    ["Obragero","Denominação dos trabalhadores do ciclo das obragens.",2,"t"],
-    ["Mensu","Trabalhador do regime de servidão no período obragero.",2,"t"],
-    ["Barrageiro","Denominação dos operários que construíram a usina.",4,"t"],
-    ["Sacoleiro","Vocábulo da dinâmica comercial urbana de fronteira.",3,"t"],
-    ["Catador","Sujeito urbano presente na pluralidade social do território.",2,"t"],
-    ["Pescador","Povo ribeirinho que vivencia diariamente as águas do rio.",3,"t"],
-    ["Fronteirista","Habituante que circula e vive na zona de fronteira.",3,"t"],
-    ["Bilíngue","Condição de sinalização e vivência em duas línguas.",3,"t"],
-    ["Trilíngue","Comunicação nos três idiomas principais (PT, ES, GN).",4,"t"],
-    ["Idioma","Sistema linguístico de expressão dos diferentes grupos.",3,"t"],
-    ["Sotaque","Variação fonética dos colonos sulistas, paraguaios e migrantes.",4,"t"],
-    ["Dialeto","Variações regionais e linguísticas presentes nos dispositivos de áudio.",3,"t"],
-    ["Oralidade","Dimensão essencial da transmissão cultural dos povos originários e barrageiros.",5,"t"],
-    ["Depoimento","Relato gravado em primeira pessoa para as estações de escuta.",3,"t"],
-    ["Relato","Narrativa de vida dos trabalhadores e moradores locais.",3,"t"],
-    ["Mosaico","Composição visual e sonora das vozes da exposição.",4,"t"],
-    ["Polifonia","Encontro de múltiplas vozes e línguas no mesmo espaço.",5,"t"],
-    ["Vozerio","Paisagem sonora do mercado, das vilas e dos canteiros de obra.",3,"t"],
-    ["Murmúrio","Som sutil de conversas em diferentes línguas nos nichos.",2,"t"],
-    ["Sussurro","Elemento sonoro para escuta atenta de memórias e orações.",2,"t"],
-    ["Grito","Expressão sonora do trabalho e da convivência comunitária.",2,"t"],
-    ["Topônimo","Nome próprio de lugar derivado de raízes indígenas ou históricas.",3,"t"],
-    ["Tradução","Mediação entre termos técnicos/locais e a linguagem cotidiana.",3,"t"],
-    ["Pertencimento","Sentimento despertado ao reconhecer a própria língua e cultura.",4,"t"],
-    ["Caldeirão","Metáfora do encontro e fusão das diversas matrizes étnicas.",4,"t"],
-    ["Pluralidade","Diversidade humana, social e linguística do território.",3,"t"],
-    ["Fronteira","Ponto de encontro, troca e coexistência cultural.",5,"t"],
-
-    ["Fronteira como ponte","A visão da fronteira como lugar de diálogo e união.",4,"e"],
-    ["Língua-mãe","Referência ao status do Guarani e dos idiomas nativos do território.",4,"e"],
-    ["Diversidade linguística","Eixo temático dedicado às línguas e sotaques regionais.",5,"e"],
-    ["Tríplice fronteira","A convergência geográfica e cultural de Brasil, Paraguai e Argentina.",5,"e"],
-    ["Poesia e oralidade dos barrageiros","A literatura oral dos operários da usina.",3,"e"],
-    ["A pedra que canta","Tradução poética do nome de origem guarani Itaipu.",5,"e"],
-    ["Mosaico de rostos e vozes","Instalação multissensorial dos sujeitos da fronteira.",3,"e"],
-    ["Portunhol da fronteira","A língua franca surgida da convivência diária.",3,"e"],
-    ["Relatos em primeira pessoa","Depoimentos diretos sem intermédio de narradores externos.",3,"e"],
-    ["Escuta atenta de relatos orais","Experiência sonora nos nichos de áudio e fones.",2,"e"],
-    ["Cultura essencialmente oral","Característica da tradição e transmissão de saberes Guarani.",3,"e"],
-    ["Sotaques do sul","Marcas fonéticas da colonização por gaúchos e catarinenses.",3,"e"],
-    ["Paisagem sonora viva","Conjunto de sons, línguas e ruídos históricos da exposição.",4,"e"],
-    ["Nuvem de idiomas","Aplicação gráfica com palavras cruzadas em múltiplas línguas.",3,"e"],
-    ["A palavra viva","O valor do testemunho falado sobre o texto escrito impresso.",4,"e"],
-    ["Histórias de vida e memórias","Registros pessoais que compõem o acervo imaterial.",2,"e"],
-    ["Pluralidade cultural e linguística","Riqueza de matrizes étnicas e idiomas do Oeste do Paraná.",2,"e"],
-    ["Línguas do território","Vocabulário dos povos originários e grupos de imigração.",3,"e"],
-    ["Vozes da fronteira","Depoimentos de brasileiros, paraguaios, árabes e imigrantes.",5,"e"],
-    ["Tradição e dizeres regionais","Expressões populares mantidas no cotidiano comunitário.",2,"e"]
+  /* [importância 2–5, [termo ES, significado ES], [termo PT, significado PT], rótulo curto ES, rótulo curto PT] */
+  const PAIRS = [
+    [5,["Justicia Climática","Soluciones climáticas justas que protegen a las poblaciones más vulnerables."],
+       ["Justiça Climática","Soluções climáticas justas que protegem as populações mais vulneráveis."]],
+    [3,["Redes Inteligentes (Smart Grids)","Sistemas eléctricos digitales que optimizan el uso de energías renovables."],
+       ["Redes Inteligentes (Smart Grids)","Sistemas elétricos digitais que otimizam o uso de energias renováveis."],"Redes Inteligentes","Redes Inteligentes"],
+    [3,["Tecnologías","Innovaciones para aumentar la eficiencia y reducir los impactos ambientales."],
+       ["Tecnologias","Inovações para aumentar a eficiência e reduzir impactos ambientais."]],
+    [3,["Infraestructura Sostenible","Construcciones diseñadas para operar con energía limpia y bajo impacto."],
+       ["Infraestrutura Sustentável","Construções projetadas para operar com energia limpa e baixo impacto."]],
+    [4,["Economía Circular","Modelo económico basado en reducir, reutilizar y reciclar recursos continuamente."],
+       ["Economia Circular","Modelo econômico baseado em reduzir, reutilizar e reciclar recursos continuamente."]],
+    [5,["Descarbonización","Eliminación de las emisiones de CO2, cambiando combustibles fósiles por energía limpia."],
+       ["Descarbonização","Eliminação das emissões de CO2, trocando combustíveis fósseis por energia limpa."]],
+    [3,["Políticas Ambientales","Leyes y regulaciones creadas para garantizar y fomentar prácticas sostenibles."],
+       ["Políticas Ambientais","Leis e regulamentações criadas para garantir e incentivar práticas sustentáveis."]],
+    [5,["Resiliencia","Capacidad de la sociedad y los ecosistemas de resistir a eventos climáticos extremos."],
+       ["Resiliência","Capacidade da sociedade e ecossistemas de resistirem a eventos climáticos extremos."]],
+    [3,["Metas Ambiciosas","Objetivos climáticos audaces, como reducir a cero las emisiones de carbono para 2050."],
+       ["Metas Ambiciosas","Objetivos climáticos ousados, como zerar as emissões de carbono até 2050."]],
+    [4,["Innovación Tecnológica","Creación de nuevas soluciones para viabilizar la transición energética."],
+       ["Inovação Tecnológica","Criação de novas soluções para viabilizar a transição energética."]],
+    [4,["Adaptación","Cambios estructurales para convivir con los efectos inevitables del calentamiento global."],
+       ["Adaptação","Mudanças estruturais para conviver com os efeitos inevitáveis do aquecimento global."]],
+    [3,["Compromiso Global","Unión de países y tratados internacionales para combatir la crisis climática."],
+       ["Compromisso Global","União de países e tratados internacionais para combater a crise climática."]],
+    [5,["Transición Energética","Sustitución de matrices fósiles por fuentes de energía renovable."],
+       ["Transição Energética","Substituição de matrizes fósseis por fontes de energia renováveis."]],
+    [4,["Reducción de Emisiones","Disminución de la cantidad de gases contaminantes emitidos a la atmósfera."],
+       ["Redução de Emissões","Diminuição da quantidade de gases poluentes lançados na atmosfera."]],
+    [3,["Inversión Verde","Financiamiento exclusivo para proyectos que protegen o recuperan el medio ambiente."],
+       ["Investimento Verde","Financiamento exclusivo para projetos que protegem ou recuperam o meio ambiente."]],
+    [4,["El Viaje / Rumbo a la Sostenibilidad","Transformación continua de hábitos y economías para alcanzar el equilibrio ecológico."],
+       ["A Jornada / Rumo à Sustentabilidade","Transformação contínua de hábitos e economias para alcançar o equilíbrio ecológico."],
+       "Rumbo a la Sostenibilidad","Rumo à Sustentabilidade"],
+    [4,["Eficiencia Energética","Hacer más o lo mismo usando menos energía."],
+       ["Eficiência Energética","Fazer mais ou o mesmo utilizando menos energia."]],
+    [4,["Hidrógeno Verde","Combustible limpio generado por fuentes renovables, sin emitir CO2."],
+       ["Hidrogênio Verde","Combustível limpo gerado a partir de fontes renováveis, sem emitir CO2."]],
+    [3,["Mercado de Carbono","Sistema financiero de compra y venta de créditos de emisión de gases contaminantes."],
+       ["Mercado de Carbono","Sistema financeiro de compra e venda de créditos de emissão de gases poluentes."]],
+    [3,["Movilidad Eléctrica","Cambio de la flota de vehículos de combustión por modelos movidos por electricidad."],
+       ["Mobilidade Elétrica","Substituição da frota de veículos a combustão por modelos movidos a eletricidade."]],
+    [2,["Almacenamiento de Energía","Sistemas (como baterías avanzadas) para guardar energía intermitente (solar/eólica) para uso continuo."],
+       ["Armazenamento de Energia","Sistemas (como baterias avançadas) para guardar energia intermitente (solar/eólica) para uso contínuo."]],
+    [3,["Captura de Carbono (CCS)","Retención de CO2 directamente en la fuente emisora para evitar que llegue a la atmósfera."],
+       ["Captura de Carbono (CCS)","Retenção de CO2 diretamente na fonte emissora para evitar que chegue à atmosfera."],"Captura de Carbono","Captura de Carbono"],
+    [3,["Huella de Carbono","Medida del total de gases de efecto invernadero generados por las actividades de una persona, producto o empresa."],
+       ["Pegada de Carbono","Medida do total de gases de efeito estufa gerados pelas atividades de uma pessoa, produto ou empresa."]],
+    [2,["Generación Distribuida","Producción de energía limpia por el propio consumidor, cerca del lugar de uso (ej: paneles solares residenciales)."],
+       ["Geração Distribuída","Produção de energia limpa pelo próprio consumidor, próxima ao local de uso (ex: placas solares residenciais)."]],
+    [3,["Criterios ESG (Ambiental, Social y Gobernanza)","Estándares de gestión que evalúan el compromiso y el impacto ético y sostenible de las empresas."],
+       ["Critérios ESG (Ambiental, Social e Governança)","Padrões de gestão que avaliam o compromisso e o impacto ético e sustentável das empresas."],
+       "Criterios ESG","Critérios ESG"],
+    [3,["Biocombustibles","Combustibles derivados de materia orgánica (biomasa), como etanol y biodiésel, como alternativa a los fósiles."],
+       ["Biocombustíveis","Combustíveis derivados de matéria orgânica (biomassa), como etanol e biodiesel, em alternativa aos fósseis."]]
   ];
 
   /* ---------- parâmetros ---------- */
-  const W = 3840, H = 2160;
-  const M = {l:120, r:120, t:110, b:190};            // margens da nuvem (base reserva a instrução)
-  const RESHUFFLE_MS = 34000;                         // recomposição da nuvem
-  const FOCUS_Y = 850;                                // linha da palavra em destaque
-  const FILL = 0.66;                                  // ocupação da área útil
-  const SIZE = {5:[170,215], 4:[108,138], 3:[74,92], 2:[54,66]};
-  const ECHO = [32,44];
-  const CAP  = {5:1500, 4:1050, 3:780, 2:620, echo:560};
+  const W = 535, H = 1920;
+  const M = {l:26, r:26, t:44, b:140};               // margens da nuvem (base reserva a instrução)
+  const RESHUFFLE_MS = 30000;                         // recomposição da nuvem
+  const FOCUS_Y = 600;                                // linha da palavra em destaque
+  const FOCUS_MAX = 84;                               // corpo máximo da palavra em destaque
+  const FILL = 0.70;                                  // ocupação da área útil
+  const SIZE = {5:[54,66], 4:[40,48], 3:[29,35], 2:[23,27]};
+  const ECHO = [14,18];
+  const CAP  = {5:470, 4:440, 3:400, 2:370, echo:300};
   const WEIGHTS = {5:[800,900,700], 4:[700,600,800], 3:[500,600,400], 2:[400,500,300], echo:[300,400]};
+  const LH = .95;                                     // entrelinha dos rótulos em duas linhas
 
   const root = document.documentElement;
   const q = new URLSearchParams(location.search).get('tema');
@@ -175,12 +169,13 @@
   const wrap = document.getElementById('wrap');
   const stage = document.getElementById('stage');
   const card = document.getElementById('card');
-  const meaningEl = document.getElementById('meaning');
+  const $ = id => document.getElementById(id);
   const timerBar = document.querySelector('#timer i');
 
   const rand = (a,b) => a + Math.random()*(b-a);
   const pick = arr => arr[Math.floor(Math.random()*arr.length)];
   const shuffle = arr => { for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];} return arr; };
+  const dot = s => /[.!?]$/.test(s) ? s : s + '.';
 
   /* ---------- escala do palco ---------- */
   function fit(){
@@ -190,6 +185,31 @@
   }
   addEventListener('resize', fit); fit();
 
+  /* ---------- entradas ---------- */
+  function splitBalanced(text){
+    const words = text.split(' ');
+    if (words.length < 2) return [text];
+    let best = null;
+    for (let i=1;i<words.length;i++){
+      const a = words.slice(0,i).join(' '), b = words.slice(i).join(' ');
+      const score = Math.max(a.length,b.length);
+      if (!best || score < best.score) best = {score, lines:[a,b]};
+    }
+    return best.lines;
+  }
+  const ENTRIES = [];
+  PAIRS.forEach(([imp, es, pt, esLabel, ptLabel]) => {
+    const esL = esLabel || es[0], ptL = ptLabel || pt[0];
+    const merged = esL === ptL;
+    if (merged){
+      ENTRIES.push({label:ptL, full:pt[0], meaning:dot(pt[1]), lang:'pt',
+                    tLang:'ES', tTerm:es[0] === pt[0] ? '' : es[0], tMeaning:dot(es[1]), imp});
+    } else {
+      ENTRIES.push({label:esL, full:es[0], meaning:dot(es[1]), lang:'es', tLang:'PT', tTerm:pt[0], tMeaning:dot(pt[1]), imp});
+      ENTRIES.push({label:ptL, full:pt[0], meaning:dot(pt[1]), lang:'pt', tLang:'ES', tTerm:es[0], tMeaning:dot(es[1]), imp});
+    }
+  });
+
   /* ---------- itens ---------- */
   const items = [];
   const mainSlots = ['--m0','--m1','--m2','--m3','--m4','--m5','--m6'];
@@ -197,50 +217,53 @@
   const echoSlots = ['--e0','--e1','--e2','--e3'];
   let mi = 0;
 
-  function makeItem(entry, echo){
-    const [text, meaning, imp, kind] = entry;
+  function makeItem(en, echo){
     const el = document.createElement('span');
     el.className = 'w';
-    el.textContent = text;
+    el.lang = en.lang === 'es' ? 'es' : 'pt-BR';
+    const lines = (!echo && en.label.includes(' ') && en.label.length > 12) ? splitBalanced(en.label) : [en.label];
+    el.textContent = lines.join('\n');
     el.tabIndex = 0;
     el.setAttribute('role','button');
-    el.setAttribute('aria-label', `${text}: ver significado`);
-    const tier = echo ? 'echo' : imp;
+    el.setAttribute('aria-label', `${en.label}: ver significado`);
+    const tier = echo ? 'echo' : en.imp;
     const fw = pick(WEIGHTS[tier]);
     el.style.fontWeight = fw;
     let slot;
     if (echo) slot = pick(echoSlots);
-    else if (imp === 5 && Math.random() < .35) slot = pick(bigSlots);
+    else if (en.imp >= 4 && Math.random() < .3) slot = pick(bigSlots);
     else slot = mainSlots[(mi++) % mainSlots.length];
     el.style.color = `var(${slot})`;
-    const single = !text.includes(' ') && text.length <= 11;
+    const single = !en.label.includes(' ') && en.label.length <= 16;
     const it = {
-      text, meaning: /[.!?]$/.test(meaning) ? meaning : meaning + '.', imp, kind, echo, el, fw, tier,
-      rot: single && (echo ? Math.random() < .22 : (imp <= 3 && Math.random() < .22)),
+      en, lines, imp: en.imp, echo, el, fw, tier,
+      rot: single && Math.random() < (echo ? .3 : (en.imp <= 4 ? .35 : .15)),
       w100: 0, size: 0,
       x: W/2, y: H/2, s: 1, r: 0, tx: W/2, ty: H/2, ts: 1, tr: 0, fs: 1, tau: 1.4,
       lx: 0, ly: 0, ls: 0, lr: 0,
       amp: rand(.018,.034), w1: rand(.42,.9), p1: rand(0,6.28),
-      dA: echo ? rand(3,7) : rand(4,10), w2: rand(.15,.32), p2: rand(0,6.28), w3: rand(.12,.28), p3: rand(0,6.28)
+      dA: echo ? rand(1.2,2.6) : rand(1.6,3.6), w2: rand(.15,.32), p2: rand(0,6.28), w3: rand(.12,.28), p3: rand(0,6.28)
     };
     el._it = it;
     stage.appendChild(el);
     items.push(it);
   }
-  shuffle(RAW.slice()).forEach(e => makeItem(e,false));
-  shuffle(RAW.slice()).forEach(e => makeItem(e,true));
-  stage.appendChild(card); stage.appendChild(document.getElementById('hint'));
+  shuffle(ENTRIES.slice()).forEach(e => makeItem(e,false));
+  shuffle(ENTRIES.slice()).forEach(e => makeItem(e,true));
+  stage.appendChild(card); stage.appendChild($('hint'));
 
   /* ---------- medição ---------- */
   const ctx = document.createElement('canvas').getContext('2d');
+  const hOf = (it, size) => size*(.9 + (it.lines.length-1)*LH);
   function measureAll(){
+    const fam = getComputedStyle(root).getPropertyValue('--font');
     for (const it of items){
-      ctx.font = `${it.fw} 100px ${getComputedStyle(root).getPropertyValue('--font')}`;
-      it.w100 = ctx.measureText(it.text).width * (1 - 0.012 * 0.5);
+      ctx.font = `${it.fw} 100px ${fam}`;
+      it.w100 = Math.max(...it.lines.map(l => ctx.measureText(l).width)) * (1 - 0.012*0.5);
     }
   }
 
-  /* ---------- composição (espiral elíptica com grade de colisão) ---------- */
+  /* ---------- composição (espiral superelíptica com grade de colisão) ---------- */
   function sizeItems(feature){
     for (const it of items){
       const [a,b] = it.echo ? ECHO : SIZE[it.imp];
@@ -248,25 +271,31 @@
       it.cap = CAP[it.echo ? 'echo' : it.imp];
     }
     if (feature){
-      shuffle(items.filter(i => !i.echo && i.imp <= 4)).slice(0,4).forEach(i => { i.size *= 1.55; i.cap = CAP[5]; });
+      shuffle(items.filter(i => !i.echo && i.imp <= 4)).slice(0,3).forEach(i => { i.size *= 1.45; i.cap = CAP[5]; });
     }
     let area = 0;
     for (const it of items){
-      it.size = Math.min(it.size, it.cap*100/it.w100);
-      const w = it.w100*it.size/100, h = it.size*.9;
-      area += (w*1.06+12)*(h*1.1+12);
+      const capFor = it.rot ? (H-M.t-M.b)*.42 : it.cap;
+      it.size = Math.min(it.size, capFor*100/it.w100);
+      const w = it.w100*it.size/100, h = hOf(it, it.size);
+      area += (w*1.06+6)*(h*1.1+6);
     }
     const usable = (W-M.l-M.r)*(H-M.t-M.b);
     const f = Math.max(.7, Math.min(1.3, Math.sqrt(FILL*usable/area)));
-    items.forEach(i => i.size *= f);
+    items.forEach(i => {
+      i.size *= f;
+      const maxW = (i.rot ? (H-M.t-M.b)*.42 : (W-M.l-M.r));
+      i.size = Math.min(i.size, maxW*100/i.w100);
+      if (i.rot) i.size = Math.min(i.size, (W-M.l-M.r)/.9);
+    });
   }
 
   function tryPlace(){
     const L=M.l, R=W-M.r, T=M.t, B=H-M.b;
     const cx=(L+R)/2, cy=(T+B)/2, asp=(R-L)/(B-T);
-    const ay=3, ax=ay*asp;
+    const ay=3, ax=ay*asp, amax=Math.max(ax,ay);
     const thMax = ((B-T)/2)/ay*1.12;
-    const cell=160, cols=Math.ceil(W/cell), rows=Math.ceil(H/cell);
+    const cell=80, cols=Math.ceil(W/cell), rows=Math.ceil(H/cell);
     const grid = Array.from({length:cols*rows}, () => []);
     let last = null;
     const ov = (a,b) => a[0]<b[2] && a[2]>b[0] && a[1]<b[3] && a[3]>b[1];
@@ -276,8 +305,8 @@
       const c0=cl(Math.floor(r[0]/cell),cols-1), c1=cl(Math.floor(r[2]/cell),cols-1);
       const r0=cl(Math.floor(r[1]/cell),rows-1), r1=cl(Math.floor(r[3]/cell),rows-1);
       for (let yy=r0; yy<=r1; yy++) for (let xx=c0; xx<=c1; xx++){
-        const cellArr = grid[yy*cols+xx];
-        for (let k=0;k<cellArr.length;k++){ if (ov(r,cellArr[k])){ last=cellArr[k]; return true; } }
+        const arr = grid[yy*cols+xx];
+        for (let k=0;k<arr.length;k++){ if (ov(r,arr[k])){ last=arr[k]; return true; } }
       }
       return false;
     }
@@ -286,24 +315,38 @@
       const r0=cl(Math.floor(r[1]/cell),rows-1), r1=cl(Math.floor(r[3]/cell),rows-1);
       for (let yy=r0; yy<=r1; yy++) for (let xx=c0; xx<=c1; xx++) grid[yy*cols+xx].push(r);
     }
+    /* alvos estratificados: cada nível de tamanho se distribui por toda a altura */
     const order = items.slice().sort((a,b) => b.size-a.size);
+    const groups = {};
+    for (const it of order){ const g = it.echo ? 'e' : it.imp; (groups[g] = groups[g] || []).push(it); }
+    for (const g in groups){
+      const arr = groups[g], n = arr.length;
+      const slots = shuffle([...Array(n).keys()]);
+      const cols3 = shuffle([0,1,2]);
+      arr.forEach((it,i) => {
+        it._ty = T + (slots[i] + rand(.2,.8))/n*(B-T);
+        it._tx = L + (cols3[i%3] + rand(.25,.75))/3*(R-L);
+      });
+    }
     for (const it of order){
-      const w = it.w100*it.size/100, h = it.size*.9;
+      const w = it.w100*it.size/100, h = hOf(it, it.size);
       const bw = it.rot ? h : w, bh = it.rot ? w : h;
-      const longPad = Math.max(w,h)*.03+6, shortPad = Math.min(w,h)*.05+6;
+      const longPad = Math.max(w,h)*.03+3, shortPad = Math.min(w,h)*.05+3;
       const px = it.rot ? shortPad : longPad, py = it.rot ? longPad : shortPad;
       const hx = bw/2+px, hy = bh/2+py;
-      const ph = Math.random()*Math.PI*2, jx = rand(-60,60), jy = rand(-40,40);
-      let th = 0, x = 0, y = 0, ok = false;
-      while (th < thMax){
-        const co = Math.cos(th+ph), si = Math.sin(th+ph);
-        x = cx + jx + ax*th*Math.sign(co)*Math.pow(Math.abs(co),.5);
-        y = cy + jy + ay*th*Math.sign(si)*Math.pow(Math.abs(si),.5);
+      const tx = Math.min(R-bw/2, Math.max(L+bw/2, it._tx));
+      const ty = Math.min(B-bh/2, Math.max(T+bh/2, it._ty));
+      const ph = Math.random()*Math.PI*2;
+      let th = 0, rr = 0, x = 0, y = 0, ok = false;
+      while (rr < H){
+        rr = 1.6*th;
+        x = tx + rr*Math.cos(th+ph);
+        y = ty + rr*1.4*Math.sin(th+ph);
         if (x-bw/2 >= L && x+bw/2 <= R && y-bh/2 >= T && y+bh/2 <= B){
           const r = [x-hx, y-hy, x+hx, y+hy];
           if (!collide(r)){ insert(r); ok = true; break; }
         }
-        th += Math.min(.3, 12/(ay*th*asp+1));
+        th += Math.min(.5, 3/(rr+1));
       }
       if (!ok) return false;
       it.lx = x; it.ly = y; it.ls = it.size; it.lr = it.rot ? -90 : 0;
@@ -313,7 +356,7 @@
 
   function compose(feature){
     sizeItems(feature);
-    for (let a=0; a<12; a++){
+    for (let a=0; a<14; a++){
       if (tryPlace()) return true;
       items.forEach(i => i.size *= .95);
     }
@@ -339,13 +382,13 @@
       const k = 1 - Math.exp(-dt/it.tau);
       it.x += (it.tx-it.x)*k; it.y += (it.ty-it.y)*k;
       it.s += (it.ts-it.s)*k; it.r += (it.tr-it.r)*k;
-      if (it.fs !== it.ts && Math.abs(it.s-it.ts) < .4){ it.s = it.ts; setFontSize(it); }
+      if (it.fs !== it.ts && Math.abs(it.s-it.ts) < .2){ it.s = it.ts; setFontSize(it); }
       let b = 1, dx = 0, dy = 0;
       if (!reduced){
         if (it === focused) b = 1 + .012*Math.sin(t*.8+it.p1);
         else {
-          b = 1 + it.amp*Math.sin(t*it.w1+it.p1) + .02*Math.sin(t*.33 - it.x/650 - it.y/1400);
-          dx = it.dA*Math.sin(t*it.w2+it.p2); dy = it.dA*.7*Math.cos(t*it.w3+it.p3);
+          b = 1 + it.amp*Math.sin(t*it.w1+it.p1) + .02*Math.sin(t*.33 - it.y/420);
+          dx = it.dA*Math.sin(t*it.w2+it.p2); dy = it.dA*.8*Math.cos(t*it.w3+it.p3);
         }
       }
       const sc = it.s/it.fs*b;
@@ -364,18 +407,27 @@
     focused = it;
     stage.classList.add('focus');
     it.el.classList.add('sel');
-    const fitSize = Math.min(300, 3300*100/it.w100);
+    const fitSize = Math.min(FOCUS_MAX, (W-64)*100/it.w100);
     it.tx = W/2; it.ty = FOCUS_Y; it.tr = 0; it.ts = fitSize; it.tau = reduced ? .15 : .42;
     setFontSize(it);
 
+    const en = it.en;
     card.classList.remove('show');
     clearTimeout(showTimer); clearTimeout(closeTimer);
     showTimer = setTimeout(() => {
-      meaningEl.textContent = it.meaning;
+      $('full').textContent = en.full !== en.label ? en.full : '';
+      $('meaning').textContent = en.meaning;
+      $('meaning').lang = en.lang === 'es' ? 'es' : 'pt-BR';
+      $('tlang').textContent = en.tLang;
+      $('tterm').textContent = en.tTerm;
+      $('tterm').style.display = en.tTerm ? '' : 'none';
+      $('tmean').textContent = en.tMeaning;
+      $('trans').lang = en.tLang === 'ES' ? 'es' : 'pt-BR';
+      card.style.top = (FOCUS_Y + hOf(it, fitSize)/2 + 46).toFixed(0) + 'px';
       card.classList.add('show');
     }, reduced ? 0 : 260);
 
-    const ms = Math.min(15000, 7000 + it.meaning.length*60);
+    const ms = Math.min(18000, 9000 + (en.meaning.length + en.tMeaning.length)*40);
     timerBar.style.transition = 'none';
     timerBar.style.transform = 'scaleX(1)';
     void timerBar.offsetWidth;
@@ -432,7 +484,7 @@
       it.s = it.ls*.2; it.r = it.lr;
       toSlot(it, reduced ? .2 : 1.5);
       it.fs = it.ls; it.el.style.fontSize = it.ls.toFixed(2)+'px';
-      setTimeout(() => it.el.classList.add('on'), reduced ? 0 : 120 + i*16);
+      setTimeout(() => it.el.classList.add('on'), reduced ? 0 : 120 + i*20);
     });
     requestAnimationFrame(t => { lastT = t; requestAnimationFrame(frame); });
     if (!reduced) setInterval(reshuffle, RESHUFFLE_MS);
